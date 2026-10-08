@@ -28,8 +28,8 @@ char tempBuffer[WIDTH * HEIGHT];
 
 /*Returns index of list by given x,y.*/
 int getIndexByXY(int x, int y) {
-  y = y >= 0 ? (y < HEIGHT ? y : y - HEIGHT) : HEIGHT + y;
-  x = x >= 0 ? (x < WIDTH ? x : x - WIDTH) : WIDTH + x;
+  y = (HEIGHT + y) % HEIGHT;
+  x = (WIDTH + x) % WIDTH;
   return (y * WIDTH) + x;
 }
 
@@ -85,13 +85,16 @@ int main() {
     memcpy(buffer, tempBuffer, sizeof(tempBuffer));
 
     // Rendering buffer with line change.
-    char string[(WIDTH + 1) * HEIGHT];
+    char string[(WIDTH + 1) * HEIGHT + 1];
+    int count = 0;
     fputs("\033[H", stdout);
-    for (int i = 0; i < sizeof(string); i++) {
-      string[i] = buffer[i];
-      if ((i + 1) % WIDTH == 0)
-        string[++i] = 10;
+    for (int y = 0; y < HEIGHT; y++) {
+      for (int x = 0; x < WIDTH; x++) {
+        string[count++] = buffer[getIndexByXY(x, y)];
+      }
+      string[count++] = 10;
     }
+    string[count] = 0;
     fputs(string, stdout);
 
     msleep(100);
