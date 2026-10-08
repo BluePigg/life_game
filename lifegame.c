@@ -79,7 +79,7 @@ int main() {
     // Updating old buffer using tempBuffer
     for (int y = 0; y < HEIGHT; y++) {
       for (int x = 0; x < WIDTH; x++) {
-        tempBuffer[getIndexByXY(x, y)] = getState(x, y) ? '#' : ' ';
+        tempBuffer[WIDTH * y + x] = getState(x, y) ? '#' : ' ';
       }
     }
     memcpy(buffer, tempBuffer, sizeof(tempBuffer));
